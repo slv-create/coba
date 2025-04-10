@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Obat</title>
+    <style>
+        body{
+            font-family: Mukta, sans-serif;
+            height: 100vh;
+            display: grid;
+            justify-content: center;
+            align-items: center;
+            color: brown;
+            font-size: 0,9rem;
+            background-color: antiquewhite;
+            
+        }
+        h1{
+            font-family: 'Poppins', sans-serif;
+            text-align: center;
+        }
+
+        table{
+            border-radius: 10px;
+            border-collapse: collapse;
+            box-shadow: 0 5px 10px burlywood;
+            background-color: white;
+            text-align: left;
+            overflow: hidden;
+
+            thead{
+                box-shadow: 0 5px 10px burlywood;
+            }
+
+            th{
+                padding: 1rem 2rem;
+                text-transform: uppercase;
+                letter-spacing: 0.1rem;
+                font-weight: 900;
+            }
+
+            td{
+                padding: 1rem 2rem;
+
+            }
+            tr:nth-child(even){
+                background-color: bisque;
+            }
+        }
+
+        
+        input[type="text"] {
+            width: 90%;
+            padding: 12px;
+            border: 1px solid brown;
+            border-radius: 4px;
+            font-size: 16px;
+            color:brown;
+            background-color: #ffffff;
+            transition: all 0.3s ease;
+        }
+
+        button {
+            width: 50%;     /* Button mengikuti lebar kontainer */
+            padding: 12px ;
+            background-color:brown;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+    }
+</style>
+    </style>
+</head>
+<body>
+    <h1>Data Obat</h1>
+    <table class="form-input">
+        <tr>
+            <td>ID Obat</td>
+            <td>:</td>
+            <td>
+                <input type="text" name="" id="id_obat">
+            </td>
+        </tr>
+        <tr>
+            <td>Nama Obat</td>
+            <td>:</td>
+            <td>
+                <input type="text" name="" id="nama_obat">
+            </td>
+        </tr>
+        <tr>
+            <td>Stok Obat</td>
+            <td>:</td>
+            <td>
+                <input type="text" name="" id="stok_obat">
+            </td>
+        </tr>
+        <tr>
+            <td>ID Kategori Obat</td>
+            <td>:</td>
+            <td>
+                <input type="text" name="" id="id_kategori_obat">
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td>
+                <button id="btnSimpan">simpan</button>
+            </td>
+        </tr>
+    </table>
+    <h1>Tampilkan Data Di Bawah Sini: </h1>
+    <table>
+        <thead>
+            <tr>
+                <th>ID Obat</th>
+                <th>Nama Obat</th>
+                <th>Stok Obat</th>
+                <th>ID Kategori Obat</th>
+            </tr>
+        </thead>
+       <tbody>
+            <tr>
+                <td><p id="tId_obat"></p></td>
+                <td><p id="tNama_obat"></p></td>
+                <td><p id="tStok_obat"></p></td>
+                <td><p id="tId_kategori_obat"></p></td>
+            </tr>
+       </tbody>
+    </table>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-polyfills/0.1.43/polyfill.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-analytics.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-database.js"></script>
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
+        // TODO: Add SDKs for Firebase products that you want to use
+        // https://firebase.google.com/docs/web/setup#available-libraries
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDoWUY6OJT4BGJTK3k81vR66Ta_a4ohDcg",
+            authDomain: "latihan-1-5cc13.firebaseapp.com",
+            databaseURL: "https://latihan-1-5cc13-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "latihan-1-5cc13",
+            storageBucket: "latihan-1-5cc13.firebasestorage.app",
+            messagingSenderId: "310843143726",
+            appId: "1:310843143726:web:6f98b9cf8a13318c0851bf"
+        };
+
+        //
+        // Initialize Firebase
+       
+        const app = firebase.initializeApp(firebaseConfig);
+        var database = firebase.database(); //firebase mewakili link database
+        //KODE UNTUK MENAMPILKAN DATA DARI DATABASE
+        var tampil = database.ref('Obat/1'); //database mewakili firebase
+        tampil.on("value", function(snapshot){ 
+            var key = snapshot.val(); 
+            console.log(key);
+            $("#tId_obat").html("1");
+            $("#tNama_obat").html(key.nama_obat); //nama ini harus sama seperti database
+            $("#tStok_obat").html(key.stok_obat);
+            $("#tId_kategori_obat").html(key.id_kategori_obat);
+        })
+
+        $('#btnSimpan').click(function(){
+            database.ref("Obat/"+$("#id_obat").val()).set({
+                nama_obat : $('#nama_obat').val(),
+                stok_obat : $('#stok_obat').val(),
+                id_kategori_obat : $('#id_kategori_obat').val()
+            }).then(()=>{
+                alert("Data Telah Berhasil di simpan!");
+                $("#nama_obat").val("");
+                $("#stok").val("");
+                $("#id_kategori_obat").val("");
+            }).catch((error)=>{
+                alert("Gagal dengan error : "+error);
+            });
+        })
+      </script>
+</body>
+</html>
